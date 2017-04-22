@@ -1,0 +1,65 @@
+"use strict";
+
+import React, {Component} from 'react';
+import {AreaChart} from 'react-d3-basic';
+
+var data = require( 'dsv?delimiter=\t!./data/stock.tsv' );
+var data2 = require( 'dsv?delimiter=\t!./data/stock2.tsv' );
+
+var chartSeries = [
+    {
+        field: 'close',
+        name: 'Price',
+        color: '#ff7f0e',
+        area: true,
+        style: {
+            "strokeOpacity": 1,
+            "fillOpacity": .2
+        }
+    }
+],
+    x = function( d ) {
+        var parseDate = d3.time.format( "%d-%b-%y" ).parse;
+        return parseDate( d.date );
+    },
+    xScale = 'time',
+    y = function( d ) {
+        return +d;
+    }
+
+export default class AreaChartSample extends Component {
+    constructor( props ) {
+        super( props )
+        this.toggle = this.toggle.bind( this );
+        this.state = {
+            active: true
+        }
+    }
+
+    toggle() {
+        this.setState( {
+            active: !this.state.active
+        })
+    }
+
+    render() {
+        return (
+            <div>
+
+                <br/>
+                <h1 className="text-center text-danger">Area Chart</h1>
+                <br/>
+                <button onClick={this.toggle} className="btn btn-primary pull-left">toggle</button>
+                <br/>
+                <br/>
+                <AreaChart
+                    data= {this.state.active ? data : data2}
+                    chartSeries= {chartSeries}
+                    x= {x}
+                    y= {y}
+                    xScale= {xScale}
+                    />
+            </div>
+        )
+    }
+}
